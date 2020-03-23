@@ -23,11 +23,13 @@ exports.seed = function(knex) {
       const formattedArticles = formatDates(articleData);
       return knex('articles')
         .insert(formattedArticles)
+        .into('articles')
         .returning('*');
     })
     .then(articleRows => {
       const articleRef = makeRefObj(articleRows);
       const formattedComments = formatComments(commentData, articleRef);
-      return knex('comments').insert(formattedComments);
+      console.log(formattedComments);
+      return knex.insert(formattedComments).into('comments');
     });
 };
