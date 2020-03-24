@@ -1,6 +1,6 @@
 const knex = require('../db/connection');
 
-exports.selectArticleByID = (article_id, inc_votes) => {
+exports.selectArticleByID = article_id => {
   return knex('articles')
     .first('*')
     .where('article_id', article_id)
@@ -16,22 +16,20 @@ exports.selectArticleByID = (article_id, inc_votes) => {
             return article;
           });
       }
-    })
-    .then(article => {
-      if (inc_votes) {
-        return knex('articles')
-          .where('article_id', article_id)
-          .increment('votes', inc_votes)
-          .returning('*');
+    });
+};
+
+exports.updateArticle = (article_id, inc_votes = 0) => {
+  return knex('articles')
+    .first('*')
+    .where('article_id', article_id)
+    .increment('votes', inc_votes)
+    .returning('*')
+    .then(([article]) => {
+      if (!article) {
+        return Promise.reject({ status: 404, msg: 'article does not exist' });
       } else {
         return article;
       }
     });
 };
-
-// exports.updateArticle = (article_id, inc_votes) => {
-//   return knex('articles')
-//     .where('article_id', article_id)
-//     .increment('votes', inc_votes)
-//     .returning('*');
-// };
