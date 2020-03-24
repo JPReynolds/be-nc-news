@@ -75,7 +75,7 @@ describe('app', () => {
       });
     });
     describe('/articles', () => {
-      describe('/:article_id', () => {
+      describe.only('/:article_id', () => {
         describe('GET', () => {
           it('status: 200, responds with an object with the correct keys', () => {
             return request(app)
@@ -125,13 +125,26 @@ describe('app', () => {
               .send({ inc_votes: 10 })
               .expect(200)
               .then(({ body: { article } }) => {
-                expect(article.votes).to.equal(110);
+                expect(article[0].votes).to.equal(110);
               });
           });
-          it('status: 400', () => {
+          it('status: 400, invalid data-type', () => {
             return request(app)
-              .patch('/api/articles/1')
-              .send({ inc_votes: 'cat' });
+              .patch('/api/articles/2')
+              .send({ inc_votes: 'cat' })
+              .expect(400)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal('bad request');
+              });
+          });
+          it('status: 400, no inc_votes on request body', () => {
+            return request(app)
+              .patch('/api/articles/2')
+              .send({})
+              .expect(400)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal('bad request');
+              });
           });
         });
       });

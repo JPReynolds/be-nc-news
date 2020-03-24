@@ -1,6 +1,6 @@
 const knex = require('../db/connection');
 
-exports.selectArticleByID = article_id => {
+exports.selectArticleByID = (article_id, inc_votes) => {
   return knex('articles')
     .first('*')
     .where('article_id', article_id)
@@ -16,18 +16,22 @@ exports.selectArticleByID = article_id => {
             return article;
           });
       }
+    })
+    .then(article => {
+      if (inc_votes) {
+        return knex('articles')
+          .where('article_id', article_id)
+          .increment('votes', inc_votes)
+          .returning('*');
+      } else {
+        return article;
+      }
     });
 };
 
-exports.updateArticle = (article_id, inc_votes) => {
-  return knex
-    .select('*')
-    .where('article_id', article_id)
-    .from('articles')
-    .returning('*')
-    .then(([article]) => {
-      article.votes = Number(article.votes) + inc_votes;
-
-      return article;
-    });
-};
+// exports.updateArticle = (article_id, inc_votes) => {
+//   return knex('articles')
+//     .where('article_id', article_id)
+//     .increment('votes', inc_votes)
+//     .returning('*');
+// };

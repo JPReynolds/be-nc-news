@@ -4,7 +4,10 @@ exports.up = function(knex) {
     articlesTable.increments('article_id');
     articlesTable.string('title');
     articlesTable.string('body', 4000);
-    articlesTable.bigInteger('votes').defaultTo(0);
+    articlesTable
+      .integer('votes')
+      .defaultTo(0)
+      .notNullable();
     articlesTable.string('topic').references('topics.slug');
     articlesTable.string('author').references('users.username');
     articlesTable.timestamp('created_at');
