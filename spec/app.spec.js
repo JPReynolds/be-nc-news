@@ -98,7 +98,7 @@ describe('app', () => {
               .get('/api/articles/1')
               .expect(200)
               .then(({ body: { article } }) => {
-                expect(article.comment_count).to.eql(5);
+                expect(article.comment_count).to.eql(13);
               });
           });
         });
