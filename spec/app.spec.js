@@ -19,7 +19,19 @@ describe('app', () => {
             .get('/api/topics')
             .expect(200)
             .then(({ body: { topics } }) => {
+              console.log(topics);
               expect(topics).to.be.an('array');
+              expect(topics).to.have.lengthOf(3);
+            });
+        });
+        it('status: 200, each object has expected keys', () => {
+          return request(app)
+            .get('/api/topics')
+            .expect(200)
+            .then(({ body: { topics } }) => {
+              topics.forEach(topic => {
+                expect(topic).to.contain.keys('slug', 'description');
+              });
             });
         });
       });
