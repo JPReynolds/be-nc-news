@@ -8,14 +8,21 @@ const request = require('supertest');
 const app = require('../app');
 const connection = require('../db/connection');
 
-after(() => {
-  return connection.destroy();
-});
-
 describe('app', () => {
   describe('/api', () => {
+    beforeEach(() => connection.seed.run());
+    after(() => connection.destroy());
     describe('/topics', () => {
-      describe('GET', () => {});
+      describe.only('GET', () => {
+        it('status: 200, responds with an array', () => {
+          return request(app)
+            .get('/api/topics')
+            .expect(200)
+            .then(({ body: { topics } }) => {
+              expect(topics).to.be.an('array');
+            });
+        });
+      });
     });
     describe('/users', () => {
       describe('GET', () => {});
@@ -23,7 +30,7 @@ describe('app', () => {
     describe('/articles', () => {
       describe('/:article_id', () => {
         describe('GET', () => {});
-        describes('PATCH', () => {});
+        describe('PATCH', () => {});
       });
       describe('/:article_id/comments', () => {
         describe('GET', () => {});
