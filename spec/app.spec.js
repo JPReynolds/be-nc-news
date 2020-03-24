@@ -14,14 +14,14 @@ describe('app', () => {
       .get('/api/apples')
       .expect(404)
       .then(({ body: { msg } }) => {
-        expect(msg).to.equal('bad request');
+        expect(msg).to.equal('path not found');
       });
   });
   describe('/api', () => {
     beforeEach(() => connection.seed.run());
     after(() => connection.destroy());
     describe('/topics', () => {
-      describe.only('GET', () => {
+      describe('GET', () => {
         it('status: 200, responds with an array', () => {
           return request(app)
             .get('/api/topics')
@@ -44,7 +44,18 @@ describe('app', () => {
       });
     });
     describe('/users', () => {
-      describe('GET', () => {});
+      describe('/users/:username', () => {
+        describe('GET', () => {
+          it('status: 200, responds with an object', () => {
+            return request(app)
+              .get('/api/username/lurker')
+              .expect(200)
+              .then(({ body: { user } }) => {
+                expect(user).to.be.an('object');
+              });
+          });
+        });
+      });
     });
     describe('/articles', () => {
       describe('/:article_id', () => {
