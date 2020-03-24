@@ -9,6 +9,14 @@ const app = require('../app');
 const connection = require('../db/connection');
 
 describe('app', () => {
+  it('status: 404, path not found', () => {
+    return request(app)
+      .get('/api/apples')
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).to.equal('bad request');
+      });
+  });
   describe('/api', () => {
     beforeEach(() => connection.seed.run());
     after(() => connection.destroy());
@@ -19,7 +27,6 @@ describe('app', () => {
             .get('/api/topics')
             .expect(200)
             .then(({ body: { topics } }) => {
-              console.log(topics);
               expect(topics).to.be.an('array');
               expect(topics).to.have.lengthOf(3);
             });
