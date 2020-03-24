@@ -8,6 +8,9 @@ const request = require('supertest');
 const app = require('../app');
 const connection = require('../db/connection');
 
+beforeEach(() => connection.seed.run());
+after(() => connection.destroy());
+
 describe('app', () => {
   it('status: 404, path not found', () => {
     return request(app)
@@ -18,8 +21,6 @@ describe('app', () => {
       });
   });
   describe('/api', () => {
-    beforeEach(() => connection.seed.run());
-    after(() => connection.destroy());
     describe('/topics', () => {
       describe('GET', () => {
         it('status: 200, responds with an array', () => {
@@ -48,10 +49,38 @@ describe('app', () => {
         describe('GET', () => {
           it('status: 200, responds with an object', () => {
             return request(app)
-              .get('/api/username/lurker')
+              .get('/api/users/lurker')
               .expect(200)
               .then(({ body: { user } }) => {
-                expect(user).to.be.an('object');
+                expect({ user }).to.be.an('object');
+              });
+          });
+          it('status: 200, responds with the correct keys', () => {
+            return request(app)
+              .get('/api/users/lurker')
+              .expect(200)
+              .then(({ body: { user } }) => {
+                expect(user[0]).to.contain.keys(
+                  'username',
+                  'avatar_url',
+                  'name'
+                );
+              });
+          });
+          it('status: 404, valid but non-existent username', () => {
+            return request(app)
+              .get('/api/users/hello')
+              .expect(404)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal('user does not exist');
+              });
+          });
+          it.only('status: 400, invalid username', () => {
+            return request(app)
+              .get('/api/users/20')
+              .expect(404)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal('bad request');
               });
           });
         });
