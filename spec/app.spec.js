@@ -60,11 +60,7 @@ describe('app', () => {
               .get('/api/users/lurker')
               .expect(200)
               .then(({ body: { user } }) => {
-                expect(user[0]).to.contain.keys(
-                  'username',
-                  'avatar_url',
-                  'name'
-                );
+                expect(user).to.contain.keys('username', 'avatar_url', 'name');
               });
           });
           it('status: 404, valid but non-existent username', () => {
@@ -75,20 +71,37 @@ describe('app', () => {
                 expect(msg).to.equal('user does not exist');
               });
           });
-          it.only('status: 400, invalid username', () => {
-            return request(app)
-              .get('/api/users/20')
-              .expect(404)
-              .then(({ body: { msg } }) => {
-                expect(msg).to.equal('bad request');
-              });
-          });
         });
       });
     });
     describe('/articles', () => {
       describe('/:article_id', () => {
-        describe('GET', () => {});
+        describe('GET', () => {
+          it('status: 200, responds with an object with the correct keys', () => {
+            return request(app)
+              .get('/api/articles/1')
+              .expect(200)
+              .then(({ body: { article } }) => {
+                expect(article).to.contain.keys(
+                  'author',
+                  'title',
+                  'article_id',
+                  'body',
+                  'topic',
+                  'created_at',
+                  'votes'
+                );
+              });
+          });
+          it.only('status: 200, object has a comment_count key with the correct value', () => {
+            return request(app)
+              .get('/api/articles/1')
+              .expect(200)
+              .then(({ body: { article } }) => {
+                expect(article.comment_count).to.eql(5);
+              });
+          });
+        });
         describe('PATCH', () => {});
       });
       describe('/:article_id/comments', () => {
