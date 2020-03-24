@@ -93,7 +93,7 @@ describe('app', () => {
                 );
               });
           });
-          it.only('status: 200, object has a comment_count key with the correct value', () => {
+          it('status: 200, object has a comment_count key with the correct value', () => {
             return request(app)
               .get('/api/articles/1')
               .expect(200)
@@ -101,8 +101,39 @@ describe('app', () => {
                 expect(article.comment_count).to.eql(13);
               });
           });
+          it('status: 404, valid but non - existent id', () => {
+            return request(app)
+              .get('/api/articles/100')
+              .expect(404)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal('article does not exist');
+              });
+          });
+          it('status: 400, invalid id', () => {
+            return request(app)
+              .get('/api/articles/hello')
+              .expect(400)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal('bad request');
+              });
+          });
         });
-        describe('PATCH', () => {});
+        describe('PATCH', () => {
+          it('status: 200, returns article with correct id and correctly patched', () => {
+            return request(app)
+              .patch('/api/articles/1')
+              .send({ inc_votes: 10 })
+              .expect(200)
+              .then(({ body: { article } }) => {
+                expect(article.votes).to.equal(110);
+              });
+          });
+          it('status: 400', () => {
+            return request(app)
+              .patch('/api/articles/1')
+              .send({ inc_votes: 'cat' });
+          });
+        });
       });
       describe('/:article_id/comments', () => {
         describe('GET', () => {});
