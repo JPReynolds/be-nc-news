@@ -75,6 +75,74 @@ describe('app', () => {
       });
     });
     describe('/articles', () => {
+      describe.only('/articles', () => {
+        it('status: 200, responds with an array of articles', () => {
+          return request(app)
+            .get('/api/articles')
+            .expect(200)
+            .then(({ body: { articles } }) => {
+              expect(articles).to.be.an('array');
+              expect(articles).to.have.length(12);
+            });
+        });
+        it('status: 200, each article has default keys', () => {
+          return request(app)
+            .get('/api/articles')
+            .expect(200)
+            .then(({ body: { articles } }) => {
+              articles.forEach(article => {
+                expect(article).to.contain.keys(
+                  'author',
+                  'title',
+                  'article_id',
+                  'topic',
+                  'created_at',
+                  'votes'
+                );
+              });
+            });
+        });
+        it('status: 200, default sort_by by created_at and is descending', () => {
+          return request(app)
+            .get('/api/articles')
+            .expect(200)
+            .then(({ body: { articles } }) => {
+              expect(articles).to.be.descendingBy('created_at');
+            });
+        });
+        it('status:200, can accept a sort_by query default to descending', () => {
+          return request(app)
+            .get('/api/articles?sort_by=article_id')
+            .expect(200)
+            .then(({ body: { articles } }) => {
+              expect(articles).to.be.descendingBy('article_id');
+            });
+        });
+        it('status: 200, can accept an order query', () => {
+          return request(app)
+            .get('/api/articles?order=asc')
+            .expect(200)
+            .then(({ body: { articles } }) => {
+              expect(articles).to.be.ascending;
+            });
+        });
+        it('status: 200, can accept author filter', () => {
+          return request(app)
+            .get('/api/articles?author=butter_bridge')
+            .expect(200)
+            .then(({ body: { articles } }) => {
+              expect(articles).to.have.length(3);
+            });
+        });
+        it('status: 200, can accept topic filter', () => {
+          return request(app)
+            .get('/api/articles?topic=mitch')
+            .expect(200)
+            .then(({ body: { articles } }) => {
+              expect(articles).to.have.length(11);
+            });
+        });
+      });
       describe('/:article_id', () => {
         describe('GET', () => {
           it('status: 200, responds with an object with the correct keys', () => {
@@ -168,7 +236,7 @@ describe('app', () => {
               });
           });
         });
-        describe.only('GET', () => {
+        describe('GET', () => {
           it('status: 200, responds with an array of objects with the correct keys', () => {
             return request(app)
               .get('/api/articles/1/comments')
@@ -186,6 +254,54 @@ describe('app', () => {
                 });
               });
           });
+          it('status: 200, can sort_by created_at', () => {
+            return request(app)
+              .get('/api/articles/1/comments?sort_by=created_at')
+              .expect(200)
+              .then(({ body: { comments } }) => {
+                expect(comments).to.be.descendingBy('created_at');
+              });
+          });
+          it('status: 200, can sort_by comment_id', () => {
+            return request(app)
+              .get('/api/articles/1/comments?sort_by=comment_id')
+              .expect(200)
+              .then(({ body: { comments } }) => {
+                expect(comments).to.be.ascendingBy('comment_id');
+              });
+          });
+          it('status: 200, default sort_by is descending by created_at', () => {
+            return request(app)
+              .get('/api/articles/1/comments')
+              .expect(200)
+              .then(({ body: { comments } }) => {
+                expect(comments).to.be.descendingBy('created_at');
+              });
+          });
+          it('status: 404, valid but non-existent article-id', () => {
+            return request(app)
+              .get('/api/articles/100/comments')
+              .expect(404)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal('article does not exist');
+              });
+          });
+          it('status: 400, invalid article-id', () => {
+            return request(app)
+              .get('/api/articles/hello/comments')
+              .expect(400)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal('bad request');
+              });
+          });
+          // it('status: 400, invalid sort_by query', () => {
+          //   return request(app)
+          //     .get('/api/articles/1/comments?sort_by=hello')
+          //     .expect(400)
+          //     .then(({ body: { msg } }) => {
+          //       expect(msg).to.equal('bad request');
+          //     });
+          // });
         });
       });
     });
@@ -197,3 +313,6 @@ describe('app', () => {
     });
   });
 });
+
+// how to test for invalid sort_by query when there is a default
+// how to post when body references value in another table

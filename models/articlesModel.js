@@ -1,5 +1,16 @@
 const knex = require('../db/connection');
 
+exports.selectArticles = (sort_by, order, author, topic) => {
+  console.log(author);
+  return knex('articles')
+    .select('*')
+    .modify(query => {
+      if (author) query.where({ author });
+      if (topic) query.where({ topic });
+    })
+    .orderBy(sort_by || 'created_at', order || 'desc');
+};
+
 exports.selectArticleByID = article_id => {
   return knex('articles')
     .first('*')

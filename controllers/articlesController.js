@@ -1,4 +1,8 @@
-const { selectArticleByID, updateArticle } = require('../models/articlesModel');
+const {
+  selectArticleByID,
+  updateArticle,
+  selectArticles
+} = require('../models/articlesModel');
 
 exports.getArticleByID = (req, res, next) => {
   const { article_id } = req.params;
@@ -17,4 +21,14 @@ exports.patchArticleByID = (req, res, next) => {
       res.status(200).send({ article });
     })
     .catch(next);
+};
+
+exports.getArticles = (req, res, next) => {
+  const { sort_by } = req.query;
+  const { order } = req.query;
+  const { author } = req.query;
+  const { topic } = req.query;
+  selectArticles(sort_by, order, author, topic).then(articles => {
+    res.status(200).send({ articles });
+  });
 };
