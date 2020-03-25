@@ -1,13 +1,16 @@
 const knex = require('../db/connection');
 
 exports.selectArticles = (sort_by, order, author, topic) => {
-  console.log(author);
-  return knex('articles')
-    .select('*')
+  return knex
+    .select('articles.*')
+    .count('comment_id as comment_count')
+    .from('articles')
     .modify(query => {
-      if (author) query.where({ author });
       if (topic) query.where({ topic });
+      if (author) query.where({ 'articles.author': author });
     })
+    .leftJoin('comments', 'articles.article_id', '=', 'comments.article_id')
+    .groupBy('articles.article_id')
     .orderBy(sort_by || 'created_at', order || 'desc');
 };
 

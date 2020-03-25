@@ -142,6 +142,14 @@ describe('app', () => {
               expect(articles).to.have.length(11);
             });
         });
+        it('status: 200, each object has a comment_count property', () => {
+          return request(app)
+            .get('/api/articles')
+            .expect(200)
+            .then(({ body: { articles } }) => {
+              expect(articles[0].comment_count).to.equal('13');
+            });
+        });
       });
       describe('/:article_id', () => {
         describe('GET', () => {
@@ -294,14 +302,14 @@ describe('app', () => {
                 expect(msg).to.equal('bad request');
               });
           });
-          // it('status: 400, invalid sort_by query', () => {
-          //   return request(app)
-          //     .get('/api/articles/1/comments?sort_by=hello')
-          //     .expect(400)
-          //     .then(({ body: { msg } }) => {
-          //       expect(msg).to.equal('bad request');
-          //     });
-          // });
+          it('status: 400, invalid sort_by query', () => {
+            return request(app)
+              .get('/api/articles/1/comments?sort_by=hello')
+              .expect(400)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal('bad request');
+              });
+          });
         });
       });
     });
