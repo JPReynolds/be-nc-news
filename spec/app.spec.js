@@ -260,18 +260,18 @@ describe('app', () => {
         });
       });
       describe('/:article_id/comments', () => {
-        describe('POST', () => {
+        describe.only('POST', () => {
           it('status: 201, inserts comment object and responds with the posted comment', () => {
             return request(app)
               .post('/api/articles/1/comments')
-              .send({ username: 'corona', body: 'well written article' })
+              .send({ username: 'butter_bridge', body: 'well written article' })
               .expect(201)
               .then(({ body: { comment } }) => {
-                expect(comment.body).to.equal('well written article');
+                expect(comment[0].body).to.equal('well written article');
               });
           });
         });
-        describe.only('GET', () => {
+        describe('GET', () => {
           it('status: 200, responds with an array of objects with the correct keys', () => {
             return request(app)
               .get('/api/articles/1/comments')
