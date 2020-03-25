@@ -11,7 +11,15 @@ exports.selectArticles = (sort_by, order, author, topic) => {
     })
     .leftJoin('comments', 'articles.article_id', '=', 'comments.article_id')
     .groupBy('articles.article_id')
-    .orderBy(sort_by || 'created_at', order || 'desc');
+    .orderBy(sort_by || 'created_at', order || 'desc')
+    .then(articles => {
+      if (articles.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: 'author/topic does not exist'
+        });
+      }
+    });
 };
 
 exports.selectArticleByID = article_id => {
