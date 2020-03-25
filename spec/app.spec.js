@@ -271,7 +271,7 @@ describe('app', () => {
               });
           });
         });
-        describe('GET', () => {
+        describe.only('GET', () => {
           it('status: 200, responds with an array of objects with the correct keys', () => {
             return request(app)
               .get('/api/articles/1/comments')
@@ -289,20 +289,20 @@ describe('app', () => {
                 });
               });
           });
-          it('status: 200, can sort_by created_at', () => {
-            return request(app)
-              .get('/api/articles/1/comments?sort_by=created_at')
-              .expect(200)
-              .then(({ body: { comments } }) => {
-                expect(comments).to.be.descendingBy('created_at');
-              });
-          });
           it('status: 200, can sort_by comment_id', () => {
             return request(app)
               .get('/api/articles/1/comments?sort_by=comment_id')
               .expect(200)
               .then(({ body: { comments } }) => {
-                expect(comments).to.be.ascendingBy('comment_id');
+                expect(comments).to.be.descendingBy('comment_id');
+              });
+          });
+          it('status: 200, can sort_by author', () => {
+            return request(app)
+              .get('/api/articles/1/comments?sort_by=author')
+              .expect(200)
+              .then(({ body: { comments } }) => {
+                expect(comments).to.be.descendingBy('author');
               });
           });
           it('status: 200, default sort_by is descending by created_at', () => {
