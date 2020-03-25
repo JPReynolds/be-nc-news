@@ -157,8 +157,36 @@ describe('app', () => {
         });
       });
       describe('/:article_id/comments', () => {
-        describe('GET', () => {});
-        describe('POST', () => {});
+        describe('POST', () => {
+          it('status: 201, inserts comment object and responds with the posted comment', () => {
+            return request(app)
+              .post('/api/articles/1/comments')
+              .send({ username: 'corona', body: 'well written article' })
+              .expect(201)
+              .then(({ body: { comment } }) => {
+                expect(comment.body).to.equal('well written article');
+              });
+          });
+        });
+        describe.only('GET', () => {
+          it('status: 200, responds with an array of objects with the correct keys', () => {
+            return request(app)
+              .get('/api/articles/1/comments')
+              .expect(200)
+              .then(({ body: { comments } }) => {
+                expect(comments).to.be.an('array');
+                comments.forEach(comment => {
+                  expect(comment).to.contain.keys(
+                    'comment_id',
+                    'votes',
+                    'created_at',
+                    'author',
+                    'body'
+                  );
+                });
+              });
+          });
+        });
       });
     });
     describe('/comments', () => {
