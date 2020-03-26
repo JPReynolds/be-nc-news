@@ -382,14 +382,41 @@ describe('app', () => {
     describe('/comments', () => {
       describe('/:comment_id', () => {
         describe('GET', () => {});
-        describe.only('PATCH', () => {
+        describe('PATCH', () => {
           it('status: 200, returns updated comment', () => {
             return request(app)
               .patch('/api/comments/2')
               .send({ inc_votes: 1 })
               .expect(200)
               .then(({ body: { comment } }) => {
-                expect(comment[0].votes).to.equal('15');
+                expect(comment.votes).to.equal('15');
+              });
+          });
+          it('status: 404, valid but non - existent id', () => {
+            return request(app)
+              .patch('/api/comments/100')
+              .send({ inc_votes: '1' })
+              .expect(404)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal('comment does not exist');
+              });
+          });
+          it('status: 400, invalid data-type', () => {
+            return request(app)
+              .patch('/api/comments/2')
+              .send({ inc_votes: 'cat' })
+              .expect(400)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal('bad request');
+              });
+          });
+          it('status: 200, no inc_votes on request body', () => {
+            return request(app)
+              .patch('/api/comments/2')
+              .send({})
+              .expect(200)
+              .then(({ body: { comment } }) => {
+                expect(comment.votes).to.equal('14');
               });
           });
         });

@@ -1,14 +1,10 @@
 const knex = require('../db/connection');
 
 exports.insertComment = comment => {
-  if ('author' || 'body' === undefined || Object.keys(comment).length > 2) {
-    return Promise.reject({ status: 400, msg: 'bad request' });
-  } else {
-    return knex
-      .insert(comment)
-      .into('comments')
-      .returning('*');
-  }
+  return knex
+    .insert(comment)
+    .into('comments')
+    .returning('*');
 };
 
 exports.selectComments = (
@@ -22,10 +18,17 @@ exports.selectComments = (
     .orderBy(sort_by, order);
 };
 
-exports.updateComment = (comment_id, votes) => {
+exports.updateComment = (comment_id, votes = 0) => {
   return knex('comments')
     .first('*')
     .where({ comment_id })
     .increment({ votes })
-    .returning('*');
+    .returning('*')
+    .then(([comment]) => {
+      if (!comment) {
+        return Promise.reject({ status: 404, msg: 'comment does not exist' });
+      } else {
+        return comment;
+      }
+    });
 };
