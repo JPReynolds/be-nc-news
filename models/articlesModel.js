@@ -18,6 +18,8 @@ exports.selectArticles = (sort_by, order, author, topic) => {
           status: 404,
           msg: 'author/topic does not exist'
         });
+      } else {
+        return articles;
       }
     });
 };
@@ -41,11 +43,11 @@ exports.selectArticleByID = article_id => {
     });
 };
 
-exports.updateArticle = (article_id, inc_votes = 0) => {
+exports.updateArticle = (article_id, votes = 0) => {
   return knex('articles')
-    .first('*')
+    .first()
     .where('article_id', article_id)
-    .increment('votes', inc_votes)
+    .increment({ votes })
     .returning('*')
     .then(([article]) => {
       if (!article) {

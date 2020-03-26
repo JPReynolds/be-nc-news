@@ -14,7 +14,7 @@ exports.selectComments = (
 ) => {
   return knex('comments')
     .select('*')
-    .where('article_id', article_id)
+    .where({ article_id })
     .orderBy(sort_by, order);
 };
 

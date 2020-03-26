@@ -3,7 +3,7 @@ const knex = require('../db/connection');
 exports.selectUser = username => {
   return knex('users')
     .first('*')
-    .where('username', username)
+    .where({ username })
     .then(user => {
       if (!user) {
         return Promise.reject({

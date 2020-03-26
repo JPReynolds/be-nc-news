@@ -9,6 +9,11 @@ exports.handle400s = (err, req, res, next) => {
   else next(err);
 };
 
+exports.handle422s = (err, req, res, next) => {
+  const codes = ['23503'];
+  if (codes.includes(err.code))
+    res.status(422).send({ msg: 'unprocessible entity' });
+};
 exports.handle500s = (err, req, res, next) => {
   console.log(err);
   res.status(500).send({ msg: 'Server error!' });

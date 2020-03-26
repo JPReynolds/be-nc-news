@@ -24,11 +24,11 @@ exports.formatComments = (comments, articleRef) => {
 
   const formattedComments = comments.map(comment => {
     const newObj = { ...comment };
-    newObj.author = comment['created_by'];
-    delete newObj['created_by'];
-    newObj.article_id = articleRef[comment['belongs_to']];
-    delete newObj['belongs_to'];
-    newObj.created_at = new Date(comment['created_at']);
+    newObj.author = comment.created_by;
+    delete newObj.created_by;
+    newObj.article_id = articleRef[comment.belongs_to];
+    delete newObj.belongs_to;
+    newObj.created_at = new Date(comment.created_at);
     return newObj;
   });
   return formattedComments;

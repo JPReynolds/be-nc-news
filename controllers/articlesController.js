@@ -25,9 +25,9 @@ exports.patchArticleByID = (req, res, next) => {
 
 exports.getArticles = (req, res, next) => {
   const { sort_by, order, author, topic } = req.query;
+
   selectArticles(sort_by, order, author, topic)
     .then(articles => {
-      console.log(articles);
       res.status(200).send({ articles });
     })
     .catch(next);
