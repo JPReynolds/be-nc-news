@@ -20,11 +20,12 @@ exports.selectComments = (
     .select('*')
     .where('article_id', article_id)
     .orderBy(sort_by, order);
-  // .then(comments => {
-  //   if (comments.length === 0) {
-  //     return Promise.reject({ status: 404, msg: 'article does not exist' });
-  //   } else {
-  //     return comments;
-  //   }
-  // });
+};
+
+exports.updateComment = (comment_id, votes) => {
+  return knex('comments')
+    .first('*')
+    .where({ comment_id })
+    .increment({ votes })
+    .returning('*');
 };

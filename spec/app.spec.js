@@ -158,15 +158,15 @@ describe('app', () => {
               expect(msg).to.equal('bad request');
             });
         });
-        // it('status: 400, order not asc/desc', () => {
-        //   return request(app)
-        //     .get('/api/articles/order=apples')
-        //     .expect(400)
-        //     .then(({ body: { msg } }) => {
-        //       expect(msg).to.equal('bad request');
-        //     });
-        // });
-        it('status: 404, author not in the database', () => {
+        it('status: 400, order not asc/desc', () => {
+          return request(app)
+            .get('/api/articles/order=apples')
+            .expect(400)
+            .then(({ body: { msg } }) => {
+              expect(msg).to.equal('bad request');
+            });
+        });
+        it('status: 404, author/topic not in the database', () => {
           return request(app)
             .get('/api/articles?author=apples')
             .expect(404)
@@ -174,9 +174,13 @@ describe('app', () => {
               expect(msg).to.equal('author/topic does not exist');
             });
         });
-        // it('status: 404, author / topic that exists but does not have any articles associated with it', () => {
-        //   get('api/articles');
-        // });
+        it('status: 200, author / topic that exists but does not have any articles associated with it', () => {
+          get('api/articles?author=lurker')
+            .expect(200)
+            .then(({ body: { articles } }) => {
+              expect(articles).to.have.length(0);
+            });
+        });
       });
       describe('/:article_id', () => {
         describe('GET', () => {
@@ -378,11 +382,18 @@ describe('app', () => {
     describe('/comments', () => {
       describe('/:comment_id', () => {
         describe('GET', () => {});
-        describe('POST', () => {});
+        describe.only('PATCH', () => {
+          it('status: 200, returns updated comment', () => {
+            return request(app)
+              .patch('/api/comments/2')
+              .send({ inc_votes: 1 })
+              .expect(200)
+              .then(({ body: { comment } }) => {
+                expect(comment[0].votes).to.equal('15');
+              });
+          });
+        });
       });
     });
   });
 });
-
-// how to test for invalid sort_by query when there is a default
-// how to post when body references value in another table
