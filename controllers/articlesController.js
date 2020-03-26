@@ -4,6 +4,9 @@ const {
   selectArticles
 } = require('../models/articlesModel');
 
+const { checkAuthorExists } = require('../models/usersModel');
+const { checkTopicExists } = require('../models/topicsModel');
+
 exports.getArticleByID = (req, res, next) => {
   const { article_id } = req.params;
   selectArticleByID(article_id)
@@ -25,9 +28,12 @@ exports.patchArticleByID = (req, res, next) => {
 
 exports.getArticles = (req, res, next) => {
   const { sort_by, order, author, topic } = req.query;
-
-  selectArticles(sort_by, order, author, topic)
-    .then(articles => {
+  Promise.all([
+    selectArticles(sort_by, order, author, topic),
+    checkAuthorExists(author),
+    checkTopicExists(topic)
+  ])
+    .then(([articles]) => {
       res.status(200).send({ articles });
     })
     .catch(next);

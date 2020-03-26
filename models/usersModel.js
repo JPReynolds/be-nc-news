@@ -14,3 +14,16 @@ exports.selectUser = username => {
       return user;
     });
 };
+
+exports.checkAuthorExists = username => {
+  if (username) {
+    return knex('users')
+      .first()
+      .where({ username })
+      .then(user => {
+        return user
+          ? user
+          : Promise.reject({ status: 404, msg: 'user does not exist' });
+      });
+  }
+};

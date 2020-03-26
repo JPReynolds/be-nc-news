@@ -8,17 +8,23 @@ const {
   postComment,
   getCommentsByArticleID
 } = require('../controllers/commentsController');
+const { handle405s } = require('../errors');
 
-articlesRouter.route('/').get(getArticles);
+articlesRouter
+  .route('/')
+  .get(getArticles)
+  .all(handle405s);
 
 articlesRouter
   .route('/:article_id')
   .get(getArticleByID)
-  .patch(patchArticleByID);
+  .patch(patchArticleByID)
+  .all(handle405s);
 
 articlesRouter
   .route('/:article/comments')
   .post(postComment)
-  .get(getCommentsByArticleID);
+  .get(getCommentsByArticleID)
+  .all(handle405s);
 
 module.exports = articlesRouter;

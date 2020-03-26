@@ -3,10 +3,12 @@ const {
   patchComment,
   deleteComment
 } = require('../controllers/commentsController');
+const { handle405s } = require('../errors');
 
 commentsRouter
   .route('/:comment_id')
   .patch(patchComment)
-  .delete(deleteComment);
+  .delete(deleteComment)
+  .all(handle405s);
 
 module.exports = commentsRouter;
