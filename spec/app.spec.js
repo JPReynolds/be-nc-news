@@ -381,7 +381,6 @@ describe('app', () => {
     });
     describe('/comments', () => {
       describe('/:comment_id', () => {
-        describe('GET', () => {});
         describe('PATCH', () => {
           it('status: 200, returns updated comment', () => {
             return request(app)
@@ -417,6 +416,21 @@ describe('app', () => {
               .expect(200)
               .then(({ body: { comment } }) => {
                 expect(comment.votes).to.equal('14');
+              });
+          });
+        });
+        describe('DELETE', () => {
+          it('status: 204, no content upon successful deletion of house', () => {
+            return request(app)
+              .delete('/api/comments/1')
+              .expect(204);
+          });
+          it('status: 404, valid but non-existent comment_id', () => {
+            return request(app)
+              .delete('/api/comments/100')
+              .expect(404)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal('comment_id not found');
               });
           });
         });
