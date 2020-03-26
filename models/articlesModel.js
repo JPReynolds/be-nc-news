@@ -55,3 +55,14 @@ exports.updateArticle = (article_id, inc_votes = 0) => {
       }
     });
 };
+
+exports.checkArticleExists = article_id => {
+  return knex('articles')
+    .first()
+    .where({ article_id })
+    .then(article => {
+      return article
+        ? article
+        : Promise.reject({ status: 404, msg: 'article does not exist' });
+    });
+};

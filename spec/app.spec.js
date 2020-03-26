@@ -260,7 +260,7 @@ describe('app', () => {
         });
       });
       describe('/:article_id/comments', () => {
-        describe.only('POST', () => {
+        describe('POST', () => {
           it('status: 201, inserts comment object and responds with the posted comment', () => {
             return request(app)
               .post('/api/articles/1/comments')
@@ -268,6 +268,33 @@ describe('app', () => {
               .expect(201)
               .then(({ body: { comment } }) => {
                 expect(comment[0].body).to.equal('well written article');
+              });
+          });
+          it('status: 422, references article_id in another table that doesnt exist', () => {
+            return request(app)
+              .post('/api/articles/100/comments')
+              .send({ username: 'butter_bridge', body: 'well written article' })
+              .expect(422)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal('unprocessible entity');
+              });
+          });
+          it('status: 422, references a username in another table that doesnt exist', () => {
+            return request(app)
+              .post('/api/articles/1/comments')
+              .send({ username: 'hello', body: 'well written article' })
+              .expect(422)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal('unprocessible entity');
+              });
+          });
+          it('status: 400, missing column on body', () => {
+            return request(app)
+              .post('/api/articles/1/comments')
+              .send({ body: 'apples' })
+              .expect(400)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal('bad request');
               });
           });
         });
@@ -311,6 +338,14 @@ describe('app', () => {
               .expect(200)
               .then(({ body: { comments } }) => {
                 expect(comments).to.be.descendingBy('created_at');
+              });
+          });
+          it('status:200, responds with an empty array when valid id but no comments', () => {
+            return request(app)
+              .get('/api/articles/2/comments')
+              .expect(200)
+              .then(({ body: { comments } }) => {
+                expect(comments).to.have.length(0);
               });
           });
           it('status: 404, valid but non-existent article-id', () => {
