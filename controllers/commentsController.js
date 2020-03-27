@@ -30,7 +30,7 @@ exports.getCommentsByArticleID = (req, res, next) => {
     .catch(next);
 };
 
-exports.patchComment = (req, res, next) => {
+exports.patchCommentByCommentID = (req, res, next) => {
   const { comment_id } = req.params;
   const { inc_votes } = req.body;
   updateComment(comment_id, inc_votes)
@@ -40,7 +40,7 @@ exports.patchComment = (req, res, next) => {
     .catch(next);
 };
 
-exports.deleteComment = (req, res, next) => {
+exports.deleteCommentByCommentID = (req, res, next) => {
   const { comment_id } = req.params;
   removeComment(comment_id)
     .then(() => {

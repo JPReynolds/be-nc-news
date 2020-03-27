@@ -20,8 +20,6 @@ exports.makeRefObj = list => {
 };
 
 exports.formatComments = (comments, articleRef) => {
-  if (comments.length === 0) return [];
-
   const formattedComments = comments.map(comment => {
     const newObj = { ...comment };
     newObj.author = comment.created_by;

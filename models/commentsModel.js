@@ -4,7 +4,8 @@ exports.insertComment = comment => {
   return knex
     .insert(comment)
     .into('comments')
-    .returning('*');
+    .returning('*')
+    .then(([comment]) => comment);
 };
 
 exports.selectComments = (

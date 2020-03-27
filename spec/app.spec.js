@@ -54,6 +54,7 @@ describe('app', () => {
                 expect(msg).to.equal('method not allowed');
               });
           });
+          return Promise.all(promiseArr);
         });
       });
     });
@@ -96,132 +97,132 @@ describe('app', () => {
                   expect(msg).to.equal('method not allowed');
                 });
             });
+            return Promise.all(promiseArr);
           });
         });
       });
     });
     describe('/articles', () => {
-      describe('/articles', () => {
-        describe('GET', () => {
-          it('status: 200, responds with an array of articles', () => {
-            return request(app)
-              .get('/api/articles')
-              .expect(200)
-              .then(({ body: { articles } }) => {
-                expect(articles).to.be.an('array');
-                expect(articles).to.have.length(12);
-              });
-          });
-          it('status: 200, each article has default keys', () => {
-            return request(app)
-              .get('/api/articles')
-              .expect(200)
-              .then(({ body: { articles } }) => {
-                articles.forEach(article => {
-                  expect(article).to.contain.keys(
-                    'author',
-                    'title',
-                    'article_id',
-                    'topic',
-                    'created_at',
-                    'votes'
-                  );
-                });
-              });
-          });
-          it('status: 200, default sort_by by created_at and is descending', () => {
-            return request(app)
-              .get('/api/articles')
-              .expect(200)
-              .then(({ body: { articles } }) => {
-                expect(articles).to.be.descendingBy('created_at');
-              });
-          });
-          it('status: 200, can accept a sort_by query default to descending', () => {
-            return request(app)
-              .get('/api/articles?sort_by=article_id')
-              .expect(200)
-              .then(({ body: { articles } }) => {
-                expect(articles).to.be.descendingBy('article_id');
-              });
-          });
-          it('status: 200, can accept an order query', () => {
-            return request(app)
-              .get('/api/articles?order=asc')
-              .expect(200)
-              .then(({ body: { articles } }) => {
-                expect(articles).to.be.ascending;
-              });
-          });
-          it('status: 200, can accept author filter', () => {
-            return request(app)
-              .get('/api/articles?author=butter_bridge')
-              .expect(200)
-              .then(({ body: { articles } }) => {
-                expect(articles).to.have.length(3);
-              });
-          });
-          it('status: 200, can accept topic filter', () => {
-            return request(app)
-              .get('/api/articles?topic=mitch')
-              .expect(200)
-              .then(({ body: { articles } }) => {
-                expect(articles).to.have.length(11);
-              });
-          });
-          it('status: 200, each object has a comment_count property', () => {
-            return request(app)
-              .get('/api/articles')
-              .expect(200)
-              .then(({ body: { articles } }) => {
-                expect(articles[0].comment_count).to.equal('13');
-              });
-          });
-          it('status: 400, sort_by a column that doesnt exist', () => {
-            return request(app)
-              .get('/api/articles?sort_by=apples')
-              .expect(400)
-              .then(({ body: { msg } }) => {
-                expect(msg).to.equal('bad request');
-              });
-          });
-          it('status: 400, order not asc/desc', () => {
-            return request(app)
-              .get('/api/articles/order=apples')
-              .expect(400)
-              .then(({ body: { msg } }) => {
-                expect(msg).to.equal('bad request');
-              });
-          });
-          it('status: 404, author/topic not in the database', () => {
-            return request(app)
-              .get('/api/articles?author=apples')
-              .expect(404)
-              .then(({ body: { msg } }) => {
-                expect(msg).to.equal('user does not exist');
-              });
-          });
-          it('status: 200, author / topic that exists but does not have any articles associated with it', () => {
-            return request(app)
-              .get('/api/articles?author=lurker')
-              .expect(200)
-              .then(({ body: { articles } }) => {
-                expect(articles).to.have.length(0);
-              });
-          });
-        });
-        describe('INVALID METHODS', () => {
-          it('status: 405, invalid method', () => {
-            const methods = ['delete', 'put', 'patch', 'post'];
-            const promiseArr = methods.map(method => {
-              return request(app)
-                [method]('/api/articles')
-                .expect(405)
-                .then(({ body: { msg } }) => {
-                  expect(msg).to.equal('method not allowed');
-                });
+      describe('GET', () => {
+        it('status: 200, responds with an array of articles', () => {
+          return request(app)
+            .get('/api/articles')
+            .expect(200)
+            .then(({ body: { articles } }) => {
+              expect(articles).to.be.an('array');
+              expect(articles).to.have.length(12);
             });
+        });
+        it('status: 200, each article has default keys', () => {
+          return request(app)
+            .get('/api/articles')
+            .expect(200)
+            .then(({ body: { articles } }) => {
+              articles.forEach(article => {
+                expect(article).to.contain.keys(
+                  'author',
+                  'title',
+                  'article_id',
+                  'topic',
+                  'created_at',
+                  'votes'
+                );
+              });
+            });
+        });
+        it('status: 200, default sort_by by created_at and is descending', () => {
+          return request(app)
+            .get('/api/articles')
+            .expect(200)
+            .then(({ body: { articles } }) => {
+              expect(articles).to.be.descendingBy('created_at');
+            });
+        });
+        it('status: 200, can accept a sort_by query default to descending', () => {
+          return request(app)
+            .get('/api/articles?sort_by=article_id')
+            .expect(200)
+            .then(({ body: { articles } }) => {
+              expect(articles).to.be.descendingBy('article_id');
+            });
+        });
+        it('status: 200, can accept an order query', () => {
+          return request(app)
+            .get('/api/articles?order=asc')
+            .expect(200)
+            .then(({ body: { articles } }) => {
+              expect(articles).to.be.ascending;
+            });
+        });
+        it('status: 200, can accept author filter', () => {
+          return request(app)
+            .get('/api/articles?author=butter_bridge')
+            .expect(200)
+            .then(({ body: { articles } }) => {
+              expect(articles).to.have.length(3);
+            });
+        });
+        it('status: 200, can accept topic filter', () => {
+          return request(app)
+            .get('/api/articles?topic=mitch')
+            .expect(200)
+            .then(({ body: { articles } }) => {
+              expect(articles).to.have.length(11);
+            });
+        });
+        it('status: 200, each object has a comment_count property', () => {
+          return request(app)
+            .get('/api/articles')
+            .expect(200)
+            .then(({ body: { articles } }) => {
+              expect(articles[0].comment_count).to.equal('13');
+            });
+        });
+        it('status: 400, sort_by a column that doesnt exist', () => {
+          return request(app)
+            .get('/api/articles?sort_by=apples')
+            .expect(400)
+            .then(({ body: { msg } }) => {
+              expect(msg).to.equal('bad request');
+            });
+        });
+        it('status: 400, order not asc/desc', () => {
+          return request(app)
+            .get('/api/articles/order=apples')
+            .expect(400)
+            .then(({ body: { msg } }) => {
+              expect(msg).to.equal('bad request');
+            });
+        });
+        it('status: 404, author/topic not in the database', () => {
+          return request(app)
+            .get('/api/articles?author=apples')
+            .expect(404)
+            .then(({ body: { msg } }) => {
+              expect(msg).to.equal('user does not exist');
+            });
+        });
+        it('status: 200, author / topic that exists but does not have any articles associated with it', () => {
+          return request(app)
+            .get('/api/articles?author=lurker')
+            .expect(200)
+            .then(({ body: { articles } }) => {
+              expect(articles).to.have.length(0);
+            });
+        });
+      });
+      describe('INVALID METHODS', () => {
+        it('status: 405, invalid method', () => {
+          const methods = ['delete', 'put', 'patch', 'post'];
+          const promiseArr = methods.map(method => {
+            return request(app)
+              [method]('/api/articles')
+              .expect(405)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal('method not allowed');
+              });
           });
+          return Promise.all(promiseArr);
         });
       });
       describe('/:article_id', () => {
@@ -315,18 +316,26 @@ describe('app', () => {
                   expect(msg).to.equal('method not allowed');
                 });
             });
+            return Promise.all(promiseArr);
           });
         });
       });
       describe('/:article_id/comments', () => {
         describe('POST', () => {
-          it('status: 201, inserts comment object and responds with the posted comment', () => {
+          it.only('status: 201, inserts comment object and responds with the posted comment', () => {
             return request(app)
               .post('/api/articles/1/comments')
               .send({ username: 'butter_bridge', body: 'well written article' })
               .expect(201)
               .then(({ body: { comment } }) => {
-                expect(comment[0].body).to.equal('well written article');
+                expect(comment).to.contain.keys(
+                  'comment_id',
+                  'author',
+                  'body',
+                  'votes',
+                  'created_at'
+                );
+                expect(comment.votes).to.equal(0);
               });
           });
           it('status: 422, references article_id in another table that doesnt exist', () => {
@@ -443,6 +452,7 @@ describe('app', () => {
                   expect(msg).to.equal('method not allowed');
                 });
             });
+            return Promise.all(promiseArr);
           });
         });
       });
@@ -513,6 +523,7 @@ describe('app', () => {
                   expect(msg).to.equal('method not allowed');
                 });
             });
+            return Promise.all(promiseArr);
           });
         });
       });
