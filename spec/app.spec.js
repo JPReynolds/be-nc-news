@@ -256,7 +256,7 @@ describe('app', () => {
               .get('/api/articles/1')
               .expect(200)
               .then(({ body: { article } }) => {
-                expect(article.comment_count).to.eql(13);
+                expect(article.comment_count).to.eql('13');
               });
           });
           it('status: 404, valid but non - existent id', () => {
