@@ -3,6 +3,9 @@ const topicsRouter = require('../routes/topicsRouter');
 const usersRouter = require('../routes/usersRouter');
 const articlesRouter = require('../routes/articlesRouter');
 const commentsRouter = require('../routes/commentsRouter');
+const { getEndpoints } = require('../controllers/apiController');
+
+apiRouter.route('/').get(getEndpoints);
 
 apiRouter.use('/topics', topicsRouter);
 

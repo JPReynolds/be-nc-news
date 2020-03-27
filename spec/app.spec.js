@@ -21,6 +21,14 @@ describe('app', () => {
       });
   });
   describe('/api', () => {
+    it('status: 200, returns an object with the objects and descriptions', () => {
+      return request(app)
+        .get('/api')
+        .expect(200)
+        .then(({ body: { endpoints } }) => {
+          expect(endpoints).to.contain.keys('GET /api');
+        });
+    });
     describe('/topics', () => {
       describe('GET', () => {
         it('status: 200, responds with an array', () => {
@@ -322,7 +330,7 @@ describe('app', () => {
       });
       describe('/:article_id/comments', () => {
         describe('POST', () => {
-          it.only('status: 201, inserts comment object and responds with the posted comment', () => {
+          it('status: 201, inserts comment object and responds with the posted comment', () => {
             return request(app)
               .post('/api/articles/1/comments')
               .send({ username: 'butter_bridge', body: 'well written article' })
@@ -466,7 +474,7 @@ describe('app', () => {
               .send({ inc_votes: 1 })
               .expect(200)
               .then(({ body: { comment } }) => {
-                expect(comment.votes).to.equal('15');
+                expect(comment.votes).to.equal(15);
               });
           });
           it('status: 404, valid but non - existent id', () => {
@@ -493,7 +501,7 @@ describe('app', () => {
               .send({})
               .expect(200)
               .then(({ body: { comment } }) => {
-                expect(comment.votes).to.equal('14');
+                expect(comment.votes).to.equal(14);
               });
           });
         });
