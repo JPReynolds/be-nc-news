@@ -4,14 +4,12 @@
   },
   "GET /api/topics": {
     "description": "serves an array of all topics",
-    "queries": [],
     "exampleResponse": {
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
   },
   "GET /api/users/:username": {
     "description": "serves an object of the user specified ",
-    "queries": [],
     "exampleResponse": {
       "user": {
         "username": "jessjelly",
@@ -37,7 +35,6 @@
   },
   "GET /api/articles/:article_id": {
     "description": "serves an object of the article",
-    "queries": [],
     "exampleResponse": {
       "article": {
         "article_id": 1,
@@ -81,6 +78,7 @@
   },
   "GET /api/articles/:article_id/comments": {
     "description": "serves an array of all the comments for specified article",
+    "queries": ["sort_by", "order"],
     "exampleResponse": {
       "comments": {
         "comment_id": 999,
