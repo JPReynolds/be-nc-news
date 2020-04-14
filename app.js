@@ -10,6 +10,7 @@ const {
   handle500s,
 } = require('./errors');
 
+app.use(cors());
 app.use('/api', apiRouter);
 
 app.all('/*', (req, res, next) => {
@@ -20,6 +21,5 @@ app.use(handleCustomErrors);
 app.use(handle400s);
 app.use(handle422s);
 app.use(handle500s);
-app.use(cors());
 
 module.exports = app;
