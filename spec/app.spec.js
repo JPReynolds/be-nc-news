@@ -45,7 +45,7 @@ describe('app', () => {
             .get('/api/topics')
             .expect(200)
             .then(({ body: { topics } }) => {
-              topics.forEach(topic => {
+              topics.forEach((topic) => {
                 expect(topic).to.contain.keys('slug', 'description');
               });
             });
@@ -54,7 +54,7 @@ describe('app', () => {
       describe('INVALID METHODS', () => {
         it('status: 405, invalid method', () => {
           const methods = ['delete', 'put', 'patch', 'post'];
-          const promiseArr = methods.map(method => {
+          const promiseArr = methods.map((method) => {
             return request(app)
               [method]('/api/topics')
               .expect(405)
@@ -97,7 +97,7 @@ describe('app', () => {
         describe('INVALID METHODS', () => {
           it('status: 405, invalid method', () => {
             const methods = ['delete', 'put', 'patch', 'post'];
-            const promiseArr = methods.map(method => {
+            const promiseArr = methods.map((method) => {
               return request(app)
                 [method]('/api/users/1')
                 .expect(405)
@@ -126,7 +126,7 @@ describe('app', () => {
             .get('/api/articles')
             .expect(200)
             .then(({ body: { articles } }) => {
-              articles.forEach(article => {
+              articles.forEach((article) => {
                 expect(article).to.contain.keys(
                   'author',
                   'title',
@@ -222,7 +222,7 @@ describe('app', () => {
       describe('INVALID METHODS', () => {
         it('status: 405, invalid method', () => {
           const methods = ['delete', 'put', 'patch', 'post'];
-          const promiseArr = methods.map(method => {
+          const promiseArr = methods.map((method) => {
             return request(app)
               [method]('/api/articles')
               .expect(405)
@@ -316,7 +316,7 @@ describe('app', () => {
         describe('INVALID METHODS', () => {
           it('status: 405, invalid method', () => {
             const methods = ['delete', 'put', 'post'];
-            const promiseArr = methods.map(method => {
+            const promiseArr = methods.map((method) => {
               return request(app)
                 [method]('/api/articles/1')
                 .expect(405)
@@ -381,7 +381,7 @@ describe('app', () => {
               .expect(200)
               .then(({ body: { comments } }) => {
                 expect(comments).to.be.an('array');
-                comments.forEach(comment => {
+                comments.forEach((comment) => {
                   expect(comment).to.contain.keys(
                     'comment_id',
                     'votes',
@@ -452,7 +452,7 @@ describe('app', () => {
         describe('INVALID METHODS', () => {
           it('status: 405, invalid method', () => {
             const methods = ['delete', 'put', 'patch'];
-            const promiseArr = methods.map(method => {
+            const promiseArr = methods.map((method) => {
               return request(app)
                 [method]('/api/articles/1/comments')
                 .expect(405)
@@ -507,9 +507,7 @@ describe('app', () => {
         });
         describe('DELETE', () => {
           it('status: 204, no content upon successful deletion of house', () => {
-            return request(app)
-              .delete('/api/comments/1')
-              .expect(204);
+            return request(app).delete('/api/comments/1').expect(204);
           });
           it('status: 404, valid but non-existent comment_id', () => {
             return request(app)
@@ -523,7 +521,7 @@ describe('app', () => {
         describe('INVALID METHODS', () => {
           it('status: 405, invalid method', () => {
             const methods = ['put', 'post', 'get'];
-            const promiseArr = methods.map(method => {
+            const promiseArr = methods.map((method) => {
               return request(app)
                 [method]('/api/comments/1')
                 .expect(405)
