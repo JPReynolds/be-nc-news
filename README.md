@@ -22,6 +22,8 @@ Clone the repository in the terminal using:
 
 ```
 git clone https://github.com/JPReynolds/be-nc-news.git
+
+cd be-nc-news
 ```
 
 Install dependencies:
