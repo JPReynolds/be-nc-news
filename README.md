@@ -2,7 +2,7 @@
 
 This project is a RESTful API built using node.js, express and PostgreSQL. The purpose of the API is to be used by the Northcoders News website. The link to the deployed API and the front end github respository can be seen below.
 
-- Deployed API: https://jordans-nc-news.herokuapp.com/
+- Deployed API: https://jordans-nc-news.herokuapp.com/api
 - Front End: https://github.com/JPReynolds/fe-nc-news.git
 
 ## Getting Started
