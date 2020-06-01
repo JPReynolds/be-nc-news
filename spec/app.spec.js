@@ -336,6 +336,7 @@ describe('app', () => {
               .send({ username: 'butter_bridge', body: 'well written article' })
               .expect(201)
               .then(({ body: { comment } }) => {
+                console.log(comment);
                 expect(comment).to.contain.keys(
                   'comment_id',
                   'author',

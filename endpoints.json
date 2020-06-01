@@ -4,12 +4,14 @@
   },
   "GET /api/topics": {
     "description": "serves an array of all topics",
+    "queries": [],
     "exampleResponse": {
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
   },
   "GET /api/users/:username": {
     "description": "serves an object of the user specified ",
+    "queries": [],
     "exampleResponse": {
       "user": {
         "username": "jessjelly",
@@ -35,6 +37,7 @@
   },
   "GET /api/articles/:article_id": {
     "description": "serves an object of the article",
+    "queries": [],
     "exampleResponse": {
       "article": {
         "article_id": 1,
@@ -50,6 +53,7 @@
   },
   "PATCH /api/articles/:article_id": {
     "description": "updates the articles votes and serves an object of the updated article",
+    "exampleRequestBody": { "inc_votes": 1 },
     "exampleResponse": {
       "article": {
         "article_id": 1,
@@ -65,6 +69,10 @@
   },
   "POST /api/articles/:article_id/comments": {
     "description": "posts a new comment and serves an object of the new comment",
+    "exampleRequestBody": {
+      "username": "butter_bridge",
+      "body": "well written article"
+    },
     "exampleResponse": {
       "comment": {
         "comment_id": 999,
@@ -92,6 +100,7 @@
   },
   "PATCH /api/comments/:comment_id": {
     "description": "updates the comments votes and serves an object with the updated comment",
+    "exampleRequestBody": { "inc_votes": 1 },
     "exampleResponse": {
       "comment": {
         "comment_id": 999,
