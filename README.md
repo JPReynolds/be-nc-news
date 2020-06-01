@@ -38,7 +38,7 @@ Connect to the database:
 npm run setup-dbs
 ```
 
-Your application should run on port 9090 with the development environment configuration. Use the following command to listen on the port using nodemon:
+Your application should run on port 9090 with the development environment configuration. Run the following command to listen on the port:
 
 ```
 npm start
@@ -47,7 +47,7 @@ npm start
 Connect to port using:
 
 ```
-http://localhost:9090/api
+localhost:9090/api
 ```
 
 ## Running the tests
