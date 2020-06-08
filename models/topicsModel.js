@@ -4,12 +4,12 @@ exports.selectTopics = () => {
   return knex('topics').select('*');
 };
 
-exports.checkTopicExists = slug => {
+exports.checkTopicExists = (slug) => {
   if (slug) {
     return knex('topics')
       .first()
       .where({ slug })
-      .then(topic => {
+      .then((topic) => {
         return topic
           ? topic
           : Promise.reject({ status: 404, msg: 'topic does not exist' });

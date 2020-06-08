@@ -1,7 +1,7 @@
 const {
   selectArticleByID,
   updateArticle,
-  selectArticles
+  selectArticles,
 } = require('../models/articlesModel');
 
 const { checkAuthorExists } = require('../models/usersModel');
@@ -10,7 +10,7 @@ const { checkTopicExists } = require('../models/topicsModel');
 exports.getArticleByID = (req, res, next) => {
   const { article_id } = req.params;
   selectArticleByID(article_id)
-    .then(article => {
+    .then((article) => {
       res.status(200).send({ article });
     })
     .catch(next);
@@ -20,7 +20,7 @@ exports.patchArticleByID = (req, res, next) => {
   const { article_id } = req.params;
   const { inc_votes } = req.body;
   updateArticle(article_id, inc_votes)
-    .then(article => {
+    .then((article) => {
       res.status(200).send({ article });
     })
     .catch(next);
@@ -31,7 +31,7 @@ exports.getArticles = (req, res, next) => {
   Promise.all([
     selectArticles(sort_by, order, author, topic),
     checkAuthorExists(author),
-    checkTopicExists(topic)
+    checkTopicExists(topic),
   ])
     .then(([articles]) => {
       res.status(200).send({ articles });
