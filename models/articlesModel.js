@@ -5,7 +5,7 @@ exports.selectArticles = (sort_by, order, author, topic) => {
     .select('articles.*')
     .count('comment_id as comment_count')
     .from('articles')
-    .modify(query => {
+    .modify((query) => {
       if (topic) query.where({ topic });
       if (author) query.where({ 'articles.author': author });
     })
@@ -14,7 +14,7 @@ exports.selectArticles = (sort_by, order, author, topic) => {
     .orderBy(sort_by || 'created_at', order || 'desc');
 };
 
-exports.selectArticleByID = article_id => {
+exports.selectArticleByID = (article_id) => {
   return knex
     .select('articles.*')
     .count('comment_id as comment_count')
@@ -28,15 +28,6 @@ exports.selectArticleByID = article_id => {
       } else {
         return article;
       }
-      // else {
-      //   return knex('comments')
-      //     .select('*')
-      //     .where({ article_id })
-      //     .then(comments => {
-      //       article.comment_count = comments.length;
-      //       return article;
-      //     });
-      // }
     });
 };
 
@@ -55,11 +46,11 @@ exports.updateArticle = (article_id, votes = 0) => {
     });
 };
 
-exports.checkArticleExists = article_id => {
+exports.checkArticleExists = (article_id) => {
   return knex('articles')
     .first()
     .where({ article_id })
-    .then(article => {
+    .then((article) => {
       return article
         ? article
         : Promise.reject({ status: 404, msg: 'article does not exist' });
