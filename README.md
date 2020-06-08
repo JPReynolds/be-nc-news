@@ -36,6 +36,7 @@ Connect to the database:
 
 ```
 npm run setup-dbs
+npm run seed
 ```
 
 Your application should run on port 9090 with the development environment configuration. Run the following command to listen on the port:
